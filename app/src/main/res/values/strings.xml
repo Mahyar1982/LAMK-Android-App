@@ -1,0 +1,9 @@
+<resources>
+    <string name="app_name">Lamk</string>
+    <string name="title_home">LAMK</string>
+    <string name="title_schedules_rooms">Achedules and rooms</string>
+    <string name="title_lunch">Lunch</string>
+    <string name="title_reppu_events">Reppu events</string>
+    <string name="title_route_guide">Route guide</string>
+    <string-array name=""
+</resources>
