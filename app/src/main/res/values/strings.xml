@@ -5,5 +5,9 @@
     <string name="title_lunch">Lunch</string>
     <string name="title_reppu_events">Reppu events</string>
     <string name="title_route_guide">Route guide</string>
-    <string-array name=""
+    <string-array name="spinner">
+        <item>Kirkkokatu 27</item>
+        <item>Niemenkatu 73</item>
+        <item>Stahlberginkatu 10</item>
+    </string-array>
 </resources>
