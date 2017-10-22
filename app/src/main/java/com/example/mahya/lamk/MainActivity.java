@@ -1,24 +1,20 @@
 package com.example.mahya.lamk;
 
-import android.app.ActionBar;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
-import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.BottomNavigationView;
 import android.support.v7.app.AppCompatActivity;
-import android.view.Gravity;
 import android.view.MenuItem;
-import android.view.ViewGroup;
+import android.view.View;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.FrameLayout;
-import android.widget.LinearLayout;
-import android.widget.RelativeLayout;
-import android.widget.TextView;
+import android.widget.Spinner;
 
-import static android.view.ViewGroup.*;
-
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements AdapterView.OnItemSelectedListener {
 
     FrameLayout frameLayout;
+    Spinner spinner;
 
     private BottomNavigationView.OnNavigationItemSelectedListener mOnNavigationItemSelectedListener
             = new BottomNavigationView.OnNavigationItemSelectedListener() {
@@ -27,24 +23,19 @@ public class MainActivity extends AppCompatActivity {
         public boolean onNavigationItemSelected(@NonNull MenuItem item) {
             switch (item.getItemId()) {
                 case R.id.navigation_home:
-                    frameLayout.setBackgroundResource(R.mipmap.lamk_home_background);
-                    getSupportActionBar().setTitle("LAMK");
+                    homeFragment();
                     return true;
                 case R.id.navigation_schedule_rooms:
-                    frameLayout.setBackgroundResource(R.mipmap.lamk_schedule_background);
-                    getSupportActionBar().setTitle("Schedule and rooms");
+                    scheduleFragment();
                     return true;
                 case R.id.navigation_lunch:
-                    frameLayout.setBackgroundResource(R.mipmap.lamk_lunch_background);
-                    getSupportActionBar().setTitle("Lunch");
+                    lunchFragment();
                     return true;
                 case R.id.navigation_events:
-                    frameLayout.setBackgroundResource(R.mipmap.lamk_event_background);
-                    getSupportActionBar().setTitle("Reppu events");
+                    eventFragment();
                     return true;
                 case R.id.navigation_route_guide:
-                    frameLayout.setBackgroundResource(R.mipmap.lamk_route_background);
-                    getSupportActionBar().setTitle("Route guide");
+                    routeFragment();
                     return true;
             }
             return false;
@@ -70,13 +61,51 @@ public class MainActivity extends AppCompatActivity {
 //        tv.setGravity(Gravity.CENTER);
 
         frameLayout = (FrameLayout) findViewById(R.id.content);
-        frameLayout.setBackgroundResource(R.mipmap.lamk_home_background);
+        frameLayout.setBackgroundResource(R.mipmap.lamk_home_background_new);
         BottomNavigationView navigation = (BottomNavigationView) findViewById(R.id.navigation);
         navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
+        spinner = (Spinner) findViewById(R.id.spinner);
     }
 
-    private void searchRoom() {
+    private void scheduleFragment() {
+        frameLayout.setBackgroundResource(R.mipmap.lamk_schedule_background_new);
+        getSupportActionBar().setTitle("Schedule and rooms");
+        ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this,
+                R.array.spinner, android.R.layout.simple_spinner_item);
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        spinner.setAdapter(adapter);
+        spinner.setVisibility(View.VISIBLE);
+        spinner.setOnItemSelectedListener(this);
+    }
+
+    @Override
+    public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
 
     }
 
+    @Override
+    public void onNothingSelected(AdapterView<?> adapterView) {
+
+    }
+
+    private void homeFragment() {
+        frameLayout.setBackgroundResource(R.mipmap.lamk_home_background_new);
+        getSupportActionBar().setTitle("LAMK");
+        spinner.setVisibility(View.INVISIBLE);
+    }
+    private void lunchFragment() {
+        frameLayout.setBackgroundResource(R.mipmap.lamk_lunch_background_new);
+        getSupportActionBar().setTitle("Lunch");
+        spinner.setVisibility(View.INVISIBLE);
+    }
+    private void eventFragment() {
+        frameLayout.setBackgroundResource(R.mipmap.lamk_event_background_new);
+        getSupportActionBar().setTitle("Reppu events");
+        spinner.setVisibility(View.INVISIBLE);
+    }
+    private void routeFragment() {
+        frameLayout.setBackgroundResource(R.mipmap.lamk_route_background_new);
+        getSupportActionBar().setTitle("Route guide");
+        spinner.setVisibility(View.INVISIBLE);
+    }
 }
