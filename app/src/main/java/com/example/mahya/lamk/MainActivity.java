@@ -1,6 +1,7 @@
 package com.example.mahya.lamk;
 
 import android.app.DatePickerDialog;
+import android.app.TimePickerDialog;
 import android.icu.text.SimpleDateFormat;
 import android.icu.util.Calendar;
 import android.os.Build;
@@ -9,6 +10,7 @@ import android.support.annotation.NonNull;
 import android.support.annotation.RequiresApi;
 import android.support.design.widget.BottomNavigationView;
 import android.support.v7.app.AppCompatActivity;
+import android.text.format.DateUtils;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
@@ -17,9 +19,12 @@ import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.FrameLayout;
 import android.widget.Spinner;
+import android.widget.TimePicker;
 
 import java.util.Date;
 import java.util.Locale;
+
+import static android.R.attr.startYear;
 
 public class MainActivity extends AppCompatActivity implements AdapterView.OnItemSelectedListener {
 
@@ -27,12 +32,15 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
     Spinner spinner;
     Calendar myCalendar;
     EditText editTextDate, editTextTime;
+    String myFormat;
+    SimpleDateFormat sdf;
 
     @RequiresApi(api = Build.VERSION_CODES.N)
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
         getSupportActionBar().setTitle("LAMK");
         frameLayout = (FrameLayout) findViewById(R.id.content);
         frameLayout.setBackgroundResource(R.mipmap.lamk_home_background_new);
@@ -41,13 +49,30 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         spinner = (Spinner) findViewById(R.id.spinner);
         editTextDate = (EditText) findViewById(R.id.datePicker);
         editTextTime = (EditText) findViewById(R.id.timePicker);
+
+        myFormat = "dd/MM/yy"; //In which you need put here
+        sdf = new SimpleDateFormat(myFormat, Locale.US);
     }
 
     @RequiresApi(api = Build.VERSION_CODES.N)
     private void updateLabel() {
-        String myFormat = "MM/dd/yy"; //In which you need put here
-        SimpleDateFormat sdf = new SimpleDateFormat(myFormat, Locale.US);
-        editTextDate.setText(sdf.format(myCalendar.getTime()));
+        myFormat = "dd/MM/yy"; //In which you need put here
+        sdf = new SimpleDateFormat(myFormat, Locale.US);
+//        if(myCalendar.getTime()<)
+        Date currentDate = new Date();
+        if((myCalendar).after(currentDate)) {
+            editTextDate.setText(sdf.format(myCalendar.getTime()));
+
+        }
+        if((sdf.format(myCalendar.getTime())).equals(sdf.format(currentDate.getTime()))) {
+            editTextDate.setText(sdf.format(myCalendar.getTime()));
+
+        }
+        else if((myCalendar).before(currentDate)) {
+            editTextDate.setText("Perivous time is not acceptable");
+
+
+        }
     }
 
     @RequiresApi(api = Build.VERSION_CODES.N)
@@ -64,6 +89,9 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         editTextDate.setVisibility(View.VISIBLE);
         editTextTime.setVisibility(View.VISIBLE);
         myCalendar = Calendar.getInstance();
+//        Date currentDate = new Date();
+//        if(currentDate.)
+//        editTextTime.setText(myCalendar.set(Calendar.DATE, 0));
         final DatePickerDialog.OnDateSetListener date = new DatePickerDialog.OnDateSetListener() {
 
             @RequiresApi(api = Build.VERSION_CODES.N)
@@ -90,6 +118,49 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
             }
         });
 
+        editTextTime.setOnClickListener(new View.OnClickListener() {
+
+            @Override
+            public void onClick(View v) {
+                // TODO Auto-generated method stub
+                Calendar mcurrentTime = Calendar.getInstance();
+                int hour = mcurrentTime.get(Calendar.HOUR_OF_DAY);
+                int minute = mcurrentTime.get(Calendar.MINUTE);
+                TimePickerDialog mTimePicker;
+                mTimePicker = new TimePickerDialog(MainActivity.this, new TimePickerDialog.OnTimeSetListener() {
+                    @Override
+                    public void onTimeSet(TimePicker timePicker, int selectedHour, int selectedMinute) {
+
+                        Date currentDate = new Date();
+
+//                        if((sdf.format(myCalendar.getTime())).equals(sdf.format(currentDate.getTime()))) {
+//                            editTextDate.setText(sdf.format(myCalendar.getTime()));
+                            if((selectedHour < currentDate.getHours() +1) && (sdf.format(myCalendar.getTime())).equals(sdf.format(currentDate.getTime())) || (selectedHour > 19) || (selectedHour < 8)) {
+                                editTextTime.setText("Time is not acceptable");
+                            }
+                            else if ((selectedHour > 19) || (selectedHour < 8)){
+                                editTextTime.setText("Time is not acceptable");
+                            }
+                            else {
+                                editTextTime.setText( selectedHour + ":" + selectedMinute);
+                            }
+//                        }
+//                        if(selectedHour > currentDate.getHours()) {
+//                            editTextDate.setText("you can reserve class");
+//                        }
+//                        else {
+//                            editTextDate.setText("You CANNNNNT");
+//                        }
+
+
+
+                    }
+                }, hour, minute, true);//Yes 24 hour time
+                mTimePicker.setTitle("Select Time");
+                mTimePicker.show();
+
+            }
+        });
     }
 
     @Override
