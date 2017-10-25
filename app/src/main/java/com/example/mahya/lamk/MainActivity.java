@@ -25,6 +25,7 @@ import android.widget.SimpleAdapter;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.TimePicker;
+import android.widget.Toast;
 
 import com.android.volley.AuthFailureError;
 import com.android.volley.Cache;
@@ -66,6 +67,11 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
     private ArrayList<HashMap<String, String>> roomsList;
     private ArrayList<HashMap<String, String>> contactList;
     TextView textViewHeader;
+    boolean h, d = false;
+    String time = "";
+    int finalH = 0;
+    char charHour;
+
     @RequiresApi(api = Build.VERSION_CODES.N)
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -86,26 +92,8 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         textViewHeader = (TextView) findViewById(R.id.textViewHeading);
     }
 
-    @RequiresApi(api = Build.VERSION_CODES.N)
-    private void updateLabel() {
-        myFormat = "dd/MM/yy"; //In which you need put here
-        sdf = new SimpleDateFormat(myFormat, Locale.US);
-        Date currentDate = new Date();
-        if((myCalendar).after(currentDate)) {
-            editTextDate.setText(sdf.format(myCalendar.getTime()));
 
-        }
-        if((sdf.format(myCalendar.getTime())).equals(sdf.format(currentDate.getTime()))) {
-            editTextDate.setText(sdf.format(myCalendar.getTime()));
-
-        }
-        else if((myCalendar).before(currentDate)) {
-            editTextDate.setText("Perivous time is not acceptable");
-
-
-        }
-    }
-
+    ///////////////////////////////////////////////////////
     @RequiresApi(api = Build.VERSION_CODES.N)
     private void scheduleFragment() {
         frameLayout.setBackgroundResource(R.mipmap.lamk_schedule_background_new);
@@ -186,6 +174,12 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
                             }
                             else {
                                 editTextTime.setText( selectedHour + ":" + selectedMinute);
+                                h = true;
+                                finalH = selectedHour + 89;
+                                //97-108
+                                charHour = (char) finalH;
+//                                editTextDate.setText(String.valueOf(selectedHour));
+//                                editTextTime.setText(String.valueOf(charHour));
                             }
 //                        }
 //                        if(selectedHour > currentDate.getHours()) {
@@ -207,10 +201,36 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         searchButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                textViewHeader.setVisibility(View.VISIBLE);
-                handlingJson();
+                if(h && d) {
+//                        editTextTime.setText(String.valueOf(charHour));
+//                        editTextDate.setText(String.valueOf(y));
+                        textViewHeader.setVisibility(View.VISIBLE);
+                        handlingJson();
+
+                }
+                else {
+                    Toast.makeText(MainActivity.this, "please check time or date", Toast.LENGTH_LONG).show();
+                }
             }
         });
+    }
+
+    @RequiresApi(api = Build.VERSION_CODES.N)
+    private void updateLabel() {
+        myFormat = "dd/MM/yy"; //In which you need put here
+        sdf = new SimpleDateFormat(myFormat, Locale.US);
+        Date currentDate = new Date();
+        if((myCalendar).after(currentDate)) {
+            editTextDate.setText(sdf.format(myCalendar.getTime()));
+            d = true;
+        }
+        if((sdf.format(myCalendar.getTime())).equals(sdf.format(currentDate.getTime()))) {
+            editTextDate.setText(sdf.format(myCalendar.getTime()));
+            d = true;
+        }
+        else if((myCalendar).before(currentDate)) {
+            editTextDate.setText("Previous date is not acceptable");
+        }
     }
 
     @Override
@@ -285,15 +305,18 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
                             JSONObject jsonObj = new JSONObject(response);
                             // Getting JSON Array node
                             JSONArray contacts = jsonObj.getJSONArray("data");
+                            contactList.clear();
                             // looping through All Contacts
                             for (int i = 0; i < contacts.length(); i++) {
+
                                 JSONObject contactJSONObject = contacts.getJSONObject(i);
                                 String campus = contactJSONObject.getString("campus");
                                 String class_number = contactJSONObject.getString("class_number");
 //                                first_name = (first_name.equals("null")) ? "" : first_name;
                                 String capacity = contactJSONObject.getString("capacity");
                                 String floor = contactJSONObject.getString("floor");
-                                editTextTime.setText(floor);
+                                String time = contactJSONObject.getString("time");
+//                                editTextTime.setText(floor);
 //                                last_name = (last_name.equals("null")) ? "" : last_name;
 //                                statusFriend = contactJSONObject.getString("available");
                                 HashMap<String, String> contact = new HashMap<>();
@@ -303,7 +326,10 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
                                 contact.put("floor", floor);
 //                                statusFriend = (statusFriend.equals("true")) ? "Available" : "UnAvailable";
 //                                contact.put("status", statusFriend);
-                                contactList.add(contact);
+                                String stringHour = String.valueOf(charHour);
+                                if (time.contains(stringHour)) {
+                                    contactList.add(contact);
+                                }
                                 //Sorting contactlist by status
 //                                try {
 ////                                    Collections.sort(contactList, new Comparator<HashMap<String, String>>() {
