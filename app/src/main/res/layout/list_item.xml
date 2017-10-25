@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="horizontal"
+    android:layout_width="fill_parent"
+    android:layout_height="wrap_content"
+    android:padding="@dimen/activity_horizontal_margin">
+
+    <TextView
+        android:id="@+id/campus"
+        android:layout_width="60dp"
+        android:layout_height="wrap_content"
+        android:textColor="#5d5d5d"
+        android:paddingRight="5dip"
+        android:textStyle="bold" />
+
+    <TextView
+        android:id="@+id/room_number"
+        android:layout_width="50dp"
+        android:layout_height="wrap_content"
+        android:textColor="#5d5d5d"
+        android:paddingRight="5dip"
+        android:textStyle="bold" />
+
+    <TextView
+        android:id="@+id/capacity"
+        android:layout_width="50dp"
+        android:layout_height="wrap_content"
+        android:textColor="#5d5d5d"
+        android:paddingRight="5dip"
+        android:textStyle="bold" />
+
+    <TextView
+        android:id="@+id/floor"
+        android:layout_width="50dp"
+        android:layout_height="wrap_content"
+        android:textColor="#5d5d5d"
+        android:paddingRight="5dip"
+        android:textStyle="bold" />
+
+</LinearLayout>

@@ -38,7 +38,6 @@
                 android:id="@+id/datePicker"
                 android:clickable="true"
                 android:editable="false"
-                android:hint="select Date"
                 android:visibility="invisible"
                 android:background="@color/colorWhite"
                 android:textColorHint="@color/colorAccent"
@@ -53,7 +52,6 @@
                 android:id="@+id/timePicker"
                 android:clickable="true"
                 android:editable="false"
-                android:hint="select time"
                 android:visibility="invisible"
                 android:background="@color/colorWhite"
                 android:textColorHint="@color/colorAccent"
@@ -64,10 +62,28 @@
                 android:layout_marginLeft="10dp"
                 android:layout_marginRight="10dp"/>
 
+            <Button
+                android:id="@+id/searchButton"
+                android:layout_width="match_parent"
+                android:layout_height="60dp"
+                android:text="Search"
+                android:visibility="invisible"
+                android:layout_marginTop="10dp"
+                android:layout_marginLeft="10dp"
+                android:layout_marginRight="10dp"/>
+
+            <ListView
+                android:id="@+id/listView"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:visibility="invisible"
+                android:layout_marginTop="10dp"
+                android:layout_marginLeft="10dp"
+                android:layout_marginRight="10dp"/>
+
         </LinearLayout>
 
     </FrameLayout>
-
     <!--android:background="?android:attr/windowBackground"-->
 
     <android.support.design.widget.BottomNavigationView

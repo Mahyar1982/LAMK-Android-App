@@ -15,13 +15,24 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.FrameLayout;
+import android.widget.ListAdapter;
+import android.widget.ListView;
+import android.widget.SimpleAdapter;
 import android.widget.Spinner;
 import android.widget.TimePicker;
 
+import org.json.JSONArray;
+import org.json.JSONObject;
+
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.Locale;
 
 import static android.R.attr.startYear;
@@ -34,6 +45,9 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
     EditText editTextDate, editTextTime;
     String myFormat;
     SimpleDateFormat sdf;
+    Button searchButton;
+    ListView listView;
+    private ArrayList<HashMap<String, String>> roomsList;
 
     @RequiresApi(api = Build.VERSION_CODES.N)
     @Override
@@ -49,16 +63,14 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         spinner = (Spinner) findViewById(R.id.spinner);
         editTextDate = (EditText) findViewById(R.id.datePicker);
         editTextTime = (EditText) findViewById(R.id.timePicker);
-
-        myFormat = "dd/MM/yy"; //In which you need put here
-        sdf = new SimpleDateFormat(myFormat, Locale.US);
+        searchButton = (Button) findViewById(R.id.searchButton);
+        listView = (ListView) findViewById(R.id.listView);
     }
 
     @RequiresApi(api = Build.VERSION_CODES.N)
     private void updateLabel() {
         myFormat = "dd/MM/yy"; //In which you need put here
         sdf = new SimpleDateFormat(myFormat, Locale.US);
-//        if(myCalendar.getTime()<)
         Date currentDate = new Date();
         if((myCalendar).after(currentDate)) {
             editTextDate.setText(sdf.format(myCalendar.getTime()));
@@ -88,6 +100,17 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
 
         editTextDate.setVisibility(View.VISIBLE);
         editTextTime.setVisibility(View.VISIBLE);
+        searchButton.setVisibility(View.VISIBLE);
+        listView.setVisibility(View.VISIBLE);
+        roomsList = new ArrayList<>();
+
+        Date currentDate = new Date();
+        editTextDate.setHint("Select Date");
+        editTextTime.setHint(currentDate.getHours() + ":" + currentDate.getMinutes());
+
+        myFormat = "dd/MM/yy"; //In which you need put here
+        sdf = new SimpleDateFormat(myFormat, Locale.US);
+
         myCalendar = Calendar.getInstance();
 //        Date currentDate = new Date();
 //        if(currentDate.)
@@ -179,6 +202,8 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         spinner.setVisibility(View.INVISIBLE);
         editTextDate.setVisibility(View.INVISIBLE);
         editTextTime.setVisibility(View.INVISIBLE);
+        searchButton.setVisibility(View.INVISIBLE);
+        listView.setVisibility(View.INVISIBLE);
     }
     private void lunchFragment() {
         frameLayout.setBackgroundResource(R.mipmap.lamk_lunch_background_new);
@@ -186,6 +211,8 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         spinner.setVisibility(View.INVISIBLE);
         editTextDate.setVisibility(View.INVISIBLE);
         editTextTime.setVisibility(View.INVISIBLE);
+        searchButton.setVisibility(View.INVISIBLE);
+        listView.setVisibility(View.INVISIBLE);
     }
     private void eventFragment() {
         frameLayout.setBackgroundResource(R.mipmap.lamk_event_background_new);
@@ -193,6 +220,8 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         spinner.setVisibility(View.INVISIBLE);
         editTextDate.setVisibility(View.INVISIBLE);
         editTextTime.setVisibility(View.INVISIBLE);
+        searchButton.setVisibility(View.INVISIBLE);
+        listView.setVisibility(View.INVISIBLE);
     }
     private void routeFragment() {
         frameLayout.setBackgroundResource(R.mipmap.lamk_route_background_new);
@@ -200,7 +229,14 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         spinner.setVisibility(View.INVISIBLE);
         editTextDate.setVisibility(View.INVISIBLE);
         editTextTime.setVisibility(View.INVISIBLE);
+        searchButton.setVisibility(View.INVISIBLE);
+        listView.setVisibility(View.INVISIBLE);
     }
+
+    private void ReadJsonFile() {
+
+    }
+
 
     private BottomNavigationView.OnNavigationItemSelectedListener mOnNavigationItemSelectedListener
             = new BottomNavigationView.OnNavigationItemSelectedListener() {
@@ -227,7 +263,5 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
             }
             return false;
         }
-
     };
-
 }
