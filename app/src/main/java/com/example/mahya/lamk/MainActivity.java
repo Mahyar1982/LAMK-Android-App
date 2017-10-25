@@ -10,7 +10,7 @@ import android.support.annotation.NonNull;
 import android.support.annotation.RequiresApi;
 import android.support.design.widget.BottomNavigationView;
 import android.support.v7.app.AppCompatActivity;
-import android.text.format.DateUtils;
+import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
@@ -23,19 +23,35 @@ import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.SimpleAdapter;
 import android.widget.Spinner;
+import android.widget.TextView;
 import android.widget.TimePicker;
 
+import com.android.volley.AuthFailureError;
+import com.android.volley.Cache;
+import com.android.volley.Network;
+import com.android.volley.Request;
+import com.android.volley.RequestQueue;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.BasicNetwork;
+import com.android.volley.toolbox.DiskBasedCache;
+import com.android.volley.toolbox.HurlStack;
+import com.android.volley.toolbox.JsonArrayRequest;
+import com.android.volley.toolbox.JsonObjectRequest;
+import com.android.volley.toolbox.StringRequest;
+import com.android.volley.toolbox.Volley;
+
 import org.json.JSONArray;
+import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.io.IOException;
-import java.io.InputStream;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Locale;
-
-import static android.R.attr.startYear;
+import java.util.Map;
 
 public class MainActivity extends AppCompatActivity implements AdapterView.OnItemSelectedListener {
 
@@ -48,7 +64,8 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
     Button searchButton;
     ListView listView;
     private ArrayList<HashMap<String, String>> roomsList;
-
+    private ArrayList<HashMap<String, String>> contactList;
+    TextView textViewHeader;
     @RequiresApi(api = Build.VERSION_CODES.N)
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -65,6 +82,8 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         editTextTime = (EditText) findViewById(R.id.timePicker);
         searchButton = (Button) findViewById(R.id.searchButton);
         listView = (ListView) findViewById(R.id.listView);
+        contactList = new ArrayList<>();
+        textViewHeader = (TextView) findViewById(R.id.textViewHeading);
     }
 
     @RequiresApi(api = Build.VERSION_CODES.N)
@@ -102,6 +121,7 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         editTextTime.setVisibility(View.VISIBLE);
         searchButton.setVisibility(View.VISIBLE);
         listView.setVisibility(View.VISIBLE);
+
         roomsList = new ArrayList<>();
 
         Date currentDate = new Date();
@@ -184,6 +204,13 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
 
             }
         });
+        searchButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                textViewHeader.setVisibility(View.VISIBLE);
+                handlingJson();
+            }
+        });
     }
 
     @Override
@@ -204,6 +231,7 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         editTextTime.setVisibility(View.INVISIBLE);
         searchButton.setVisibility(View.INVISIBLE);
         listView.setVisibility(View.INVISIBLE);
+        textViewHeader.setVisibility(View.INVISIBLE);
     }
     private void lunchFragment() {
         frameLayout.setBackgroundResource(R.mipmap.lamk_lunch_background_new);
@@ -213,6 +241,7 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         editTextTime.setVisibility(View.INVISIBLE);
         searchButton.setVisibility(View.INVISIBLE);
         listView.setVisibility(View.INVISIBLE);
+        textViewHeader.setVisibility(View.INVISIBLE);
     }
     private void eventFragment() {
         frameLayout.setBackgroundResource(R.mipmap.lamk_event_background_new);
@@ -222,6 +251,7 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         editTextTime.setVisibility(View.INVISIBLE);
         searchButton.setVisibility(View.INVISIBLE);
         listView.setVisibility(View.INVISIBLE);
+        textViewHeader.setVisibility(View.INVISIBLE);
     }
     private void routeFragment() {
         frameLayout.setBackgroundResource(R.mipmap.lamk_route_background_new);
@@ -231,10 +261,88 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         editTextTime.setVisibility(View.INVISIBLE);
         searchButton.setVisibility(View.INVISIBLE);
         listView.setVisibility(View.INVISIBLE);
+        textViewHeader.setVisibility(View.INVISIBLE);
     }
 
-    private void ReadJsonFile() {
-
+    @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
+    private void handlingJson() {
+//        Cache cache = new DiskBasedCache(getCacheDir(), 1024 * 1024);
+//        Network network = new BasicNetwork(new HurlStack());
+//        RequestQueue mRequestQueue = new RequestQueue(cache, network);
+//        mRequestQueue.start();
+        RequestQueue queue = Volley.newRequestQueue(this);
+//        userId = getIntent().getStringExtra("userId");
+        final String url = "http://10.0.2.2:3000/api/rooms";
+        StringRequest getRequest = new StringRequest(Request.Method.GET, url,
+                new Response.Listener<String>() {
+                    @Override
+                    public void onResponse(String response) {
+                        // response
+//                        Log.d("Response", response.toString());
+//                        String responseStr = response.toString();
+//                        JSONObject jsonObj = new JSONObject(response);
+                        try {
+                            JSONObject jsonObj = new JSONObject(response);
+                            // Getting JSON Array node
+                            JSONArray contacts = jsonObj.getJSONArray("data");
+                            // looping through All Contacts
+                            for (int i = 0; i < contacts.length(); i++) {
+                                JSONObject contactJSONObject = contacts.getJSONObject(i);
+                                String campus = contactJSONObject.getString("campus");
+                                String class_number = contactJSONObject.getString("class_number");
+//                                first_name = (first_name.equals("null")) ? "" : first_name;
+                                String capacity = contactJSONObject.getString("capacity");
+                                String floor = contactJSONObject.getString("floor");
+                                editTextTime.setText(floor);
+//                                last_name = (last_name.equals("null")) ? "" : last_name;
+//                                statusFriend = contactJSONObject.getString("available");
+                                HashMap<String, String> contact = new HashMap<>();
+                                contact.put("campus", campus);
+                                contact.put("class_number", class_number);
+                                contact.put("capacity", capacity);
+                                contact.put("floor", floor);
+//                                statusFriend = (statusFriend.equals("true")) ? "Available" : "UnAvailable";
+//                                contact.put("status", statusFriend);
+                                contactList.add(contact);
+                                //Sorting contactlist by status
+//                                try {
+////                                    Collections.sort(contactList, new Comparator<HashMap<String, String>>() {
+////                                        @Override
+////                                        public int compare(HashMap<String, String> stringHashMapEmail, HashMap<String, String> stringHashMapEmail1) {
+////                                            return stringHashMapEmail.get("status").compareTo(stringHashMapEmail1.get("status"));
+////                                        }
+////                                    });
+//                                } catch (Exception e) {
+//                                    // TODO Auto-generated catch block
+//                                    e.printStackTrace();
+//                                }
+                                ListAdapter adapter = new SimpleAdapter(MainActivity.this, contactList,
+                                        R.layout.list_item, new String[]{"campus", "class_number", "capacity", "floor"},
+                                        new int[]{R.id.campus, R.id.room_number, R.id.capacity, R.id.floor});
+                                listView.setAdapter(adapter);
+                            }
+                        } catch (final JSONException e) {
+//                            Log.e(TAG, "Json parsing error: " + e.getMessage());
+                        }
+                    }
+                },
+                new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+//                        Log.d("Error.Response", error.getMessage());
+                    }
+                }
+        );
+//        {
+//            @Override
+//            public Map<String, String> getHeaders() throws AuthFailureError {
+//                HashMap<String, String> headers = new HashMap<String, String>();
+////                tokenId = getActivity().getIntent().getStringExtra("tokenId");
+////                headers.put("Authorization", tokenId);
+//                return headers;
+//            }
+//        };
+        queue.add(getRequest);
     }
 
 
