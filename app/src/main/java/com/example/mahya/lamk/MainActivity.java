@@ -234,47 +234,7 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
     }
 
     private void ReadJsonFile() {
-        String json = null;
-        try {
-            InputStream is = getAssets().open("rooms.json");
-            int sizes = is.available();
-            byte[] buffer = new byte[sizes];
-            is.read(buffer);
-            is.close();
-            json = new String(buffer, "UTF-8");
-        } catch (IOException ex) {
-            ex.printStackTrace();
-        }
-        try {
-            JSONObject jsonObj = new JSONObject(json);
-            // Getting data JSON Array nodes
-            JSONArray data  = jsonObj.getJSONArray("room");
-            // looping through All nodes
-            roomsList.clear();
-            for (int i = 0; i < data.length(); i++) {
-                JSONObject c = data.getJSONObject(i);
-                String brand = c.getString("brand");
-                String size = c.getString("size");
-                String price = c.getString("price");
-                //use >  int id = c.getInt("duration"); if you want get an int
-                // tmp hashmap for single node
-                HashMap<String, String> parsedData = new HashMap<String, String>();
-                // adding each child node to HashMap key => value
-                parsedData.put("brand", "Brand: " + brand);
-                parsedData.put("size", ", Size: " + size + " inches");
-                parsedData.put("price", ", Price: " + price + " euros");
-//                search = editText.getText().toString();
-                if ((brand.contains(search)) && (!search.isEmpty())) {
-                    roomsList.add(parsedData);
-                    ListAdapter adapter = new SimpleAdapter(MainActivity.this, roomsList,
-                            R.layout.list_item, new String[]{"campus", "room_number", "capacity", "floor"},
-                            new int[]{R.id.campus, R.id.room_number, R.id.capacity, R.id.floor});
-                    listView.setAdapter(adapter);
-                }
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+
     }
 
 
