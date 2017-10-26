@@ -73,6 +73,7 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
     int finalH = 0;
     char charHour;
     String datePick;
+    String spinnerResult;
 
     @RequiresApi(api = Build.VERSION_CODES.N)
     @Override
@@ -253,6 +254,9 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
 
     @Override
     public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
+
+       spinnerResult = adapterView.getItemAtPosition(i).toString();
+
     }
 
     @Override
@@ -351,9 +355,10 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
 //                                contact.put("status", statusFriend);
                                 String stringHour = String.valueOf(charHour);
 
-                                if (time.contains(stringHour) && date.contains(datePick)) {
-                                    editTextDate.setText(date);
-                                    editTextTime.setText(datePick);
+                                if ((time.contains(stringHour)) && (date.contains(datePick)) && (spinnerResult.contains(campus))) {
+//                                    editTextDate.setText(date);
+//                                    editTextTime.setText(datePick);
+//                                Toast.makeText(MainActivity.this, spinnerResult + "^^" + campus, Toast.LENGTH_LONG).show();
                                     contactList.add(contact);
                                 }
                                 //Sorting contactlist by status
@@ -372,6 +377,7 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
                                         R.layout.list_item, new String[]{"campus", "class_number", "capacity", "floor"},
                                         new int[]{R.id.campus, R.id.room_number, R.id.capacity, R.id.floor});
                                 listView.setAdapter(adapter);
+
                             }
                         } catch (final JSONException e) {
 //                            Log.e(TAG, "Json parsing error: " + e.getMessage());
