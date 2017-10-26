@@ -76,10 +76,12 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
     char charHour;
     String datePick;
     String spinnerResult;
-    String campusSelected, roomSelected, idSelected;
+    String campusSelected, capacitySelected, roomSelected, idSelected, floorSelected, dateSelected, timeSelected;
     int reservedHour;
     TextView textViewReservedTime;
     Button cancelReservationButton;
+    char selectedChar;
+    String firstTimeSelected;
 
     @RequiresApi(api = Build.VERSION_CODES.N)
     @Override
@@ -108,6 +110,19 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
                 campusSelected = contactList.get(i).get("campus").toString();
                 roomSelected = contactList.get(i).get("class_number").toString();
                 idSelected = contactList.get(i).get("id").toString();
+                capacitySelected = contactList.get(i).get("capacity").toString();
+                floorSelected = contactList.get(i).get("floor").toString();
+                dateSelected = contactList.get(i).get("date").toString();
+
+                firstTimeSelected = contactList.get(i).get("time").toString();
+                timeSelected = firstTimeSelected.replace(String.valueOf(selectedChar),"");
+//                editTextDate.setText(firstTimeSelected + selectedChar);
+//                editTextTime.setText(timeSelected);
+
+//                editTextDate.setText(campusSelected+roomSelected+idSelected+
+//                        capacitySelected+floorSelected+dateSelected+
+//                        timeSelected);
+
 
                 new AlertDialog.Builder(MainActivity.this)
                             .setMessage("Are you sure you want to reserve Room: " + roomSelected +
@@ -119,8 +134,9 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
                                     cancelReservationButton.setVisibility(View.VISIBLE);
                                     Toast.makeText(MainActivity.this, "At " + campusSelected + " campus, class: " + roomSelected + " , at " + reservedHour, Toast.LENGTH_LONG).show();
                                     textViewReservedTime.setText("Reserved at: " + campusSelected + " campus, class: " + roomSelected + " , at " + reservedHour + " o'clock.");
-//                                    searchButton.setEnabled(false);
-                                    searchButton.setText("Cancel the reserved time, For another reserve");
+                                    searchButton.setEnabled(false);
+                                    searchButton.setText("Reserve another time");
+                                    removeSelectedTime();
                                 }
                             })
                             .setNegativeButton("No", null)
@@ -128,9 +144,35 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
 
             }
         });
+        cancelReservationButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
 
-//        datePick = DateFormat.getDateTimeInstance().format(new Date());
-//        datePick = new SimpleDateFormat("yyyy-MM-dd").format(Calendar.getInstance().getTime());
+                new AlertDialog.Builder(MainActivity.this)
+                        .setMessage("Are you sure you want to cancel Room: " + roomSelected +
+                                " , at " + reservedHour + " , at " + campusSelected + " campus?")
+                        .setCancelable(false)
+                        .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int id) {
+                                textViewReservedTime.setVisibility(View.INVISIBLE);
+                                cancelReservationButton.setVisibility(View.INVISIBLE);
+                                textViewHeader.setVisibility(View.INVISIBLE);
+                                contactList.clear();
+                                Toast.makeText(MainActivity.this, "Reservation canceled.", Toast.LENGTH_LONG).show();
+                                textViewReservedTime.setText("");
+
+                                cancelReservation();
+                                searchButton.setEnabled(true);
+                                searchButton.setText("Search free class.");
+
+                            }
+                        })
+                        .setNegativeButton("No", null)
+                        .show();
+
+            }
+        });
+
     }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -159,6 +201,11 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         Date currentDate = new Date();
 
         reservedHour = currentDate.getHours() + 1;
+
+        finalH = reservedHour + 89;
+        //97-108
+        charHour = (char) finalH;
+        selectedChar = charHour;
 
         editTextDate.setHint(new SimpleDateFormat("yyyy-MM-dd").format(Calendar.getInstance().getTime()));
 
@@ -216,10 +263,10 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
 
 //                        if((sdf.format(myCalendar.getTime())).equals(sdf.format(currentDate.getTime()))) {
 //                            editTextDate.setText(sdf.format(myCalendar.getTime()));
-                            if((selectedHour < currentDate.getHours() +1) && (sdf.format(myCalendar.getTime())).equals(sdf.format(currentDate.getTime())) || (selectedHour > 18) || (selectedHour < 8)) {
+                            if((selectedHour < currentDate.getHours() +1) && (sdf.format(myCalendar.getTime())).equals(sdf.format(currentDate.getTime())) || (selectedHour > 19) || (selectedHour < 7)) {
                                 editTextTime.setText("Time is not acceptable");
                             }
-                            else if ((selectedHour > 18) || (selectedHour < 8)){
+                            else if ((selectedHour > 19) || (selectedHour < 7)){
                                 editTextTime.setText("Time is not acceptable");
                             }
                             else {
@@ -231,6 +278,7 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
                                 finalH = selectedHour + 89 + 1;
                                 //97-108
                                 charHour = (char) finalH;
+                                selectedChar = charHour;
 
 //                                editTextDate.setText(String.valueOf(selectedHour));
 //                                editTextDate.setText(String.valueOf(selectedHour+1));
@@ -304,134 +352,22 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
     public void onNothingSelected(AdapterView<?> adapterView) {
 
     }
-
-    private void homeFragment() {
-        frameLayout.setBackgroundResource(R.mipmap.lamk_home_background_new);
-        getSupportActionBar().setTitle("LAMK");
-        spinner.setVisibility(View.INVISIBLE);
-        editTextDate.setVisibility(View.INVISIBLE);
-        editTextTime.setVisibility(View.INVISIBLE);
-        searchButton.setVisibility(View.INVISIBLE);
-        listView.setVisibility(View.INVISIBLE);
-        textViewHeader.setVisibility(View.INVISIBLE);
-        textViewReservedTime.setVisibility(View.INVISIBLE);
-        cancelReservationButton.setVisibility(View.INVISIBLE);
-
-    }
-    private void lunchFragment() {
-        frameLayout.setBackgroundResource(R.mipmap.lamk_lunch_background_new);
-        getSupportActionBar().setTitle("Lunch");
-        spinner.setVisibility(View.INVISIBLE);
-        editTextDate.setVisibility(View.INVISIBLE);
-        editTextTime.setVisibility(View.INVISIBLE);
-        searchButton.setVisibility(View.INVISIBLE);
-        listView.setVisibility(View.INVISIBLE);
-        textViewHeader.setVisibility(View.INVISIBLE);
-        textViewReservedTime.setVisibility(View.INVISIBLE);
-        cancelReservationButton.setVisibility(View.INVISIBLE);
-    }
-    private void eventFragment() {
-        frameLayout.setBackgroundResource(R.mipmap.lamk_event_background_new);
-        getSupportActionBar().setTitle("Reppu events");
-        spinner.setVisibility(View.INVISIBLE);
-        editTextDate.setVisibility(View.INVISIBLE);
-        editTextTime.setVisibility(View.INVISIBLE);
-        searchButton.setVisibility(View.INVISIBLE);
-        listView.setVisibility(View.INVISIBLE);
-        textViewHeader.setVisibility(View.INVISIBLE);
-        textViewReservedTime.setVisibility(View.INVISIBLE);
-        cancelReservationButton.setVisibility(View.INVISIBLE);
-    }
-    private void routeFragment() {
-        frameLayout.setBackgroundResource(R.mipmap.lamk_route_background_new);
-        getSupportActionBar().setTitle("Route guide");
-        spinner.setVisibility(View.INVISIBLE);
-        editTextDate.setVisibility(View.INVISIBLE);
-        editTextTime.setVisibility(View.INVISIBLE);
-        searchButton.setVisibility(View.INVISIBLE);
-        listView.setVisibility(View.INVISIBLE);
-        textViewHeader.setVisibility(View.INVISIBLE);
-        textViewReservedTime.setVisibility(View.INVISIBLE);
-        cancelReservationButton.setVisibility(View.INVISIBLE);
-    }
-/////////////////////////////////////////////////////////////////
+/////////////////////////////////////////////////////////////////////////////////
 
     @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
-    private void removeSelectedTime() {
-//        Cache cache = new DiskBasedCache(getCacheDir(), 1024 * 1024);
-//        Network network = new BasicNetwork(new HurlStack());
-//        RequestQueue mRequestQueue = new RequestQueue(cache, network);
-//        mRequestQueue.start();
+    private void cancelReservation() {
         RequestQueue queue = Volley.newRequestQueue(this);
-//        userId = getIntent().getStringExtra("userId");
 
-        final String url = "http://10.0.2.2:3000/api/rooms";
-        StringRequest getRequest = new StringRequest(Request.Method.GET, url,
+        final String url = "http://10.0.2.2:3000/api/rooms/" + idSelected;
+        StringRequest putRequest = new StringRequest(Request.Method.PUT, url,
                 new Response.Listener<String>() {
                     @Override
                     public void onResponse(String response) {
                         // response
-//                        Log.d("Response", response.toString());
-//                        String responseStr = response.toString();
-//                        JSONObject jsonObj = new JSONObject(response);
                         try {
                             JSONObject jsonObj = new JSONObject(response);
                             // Getting JSON Array node
-                            JSONArray contacts = jsonObj.getJSONArray("data");
-                            contactList.clear();
-                            // looping through All Contacts
-                            for (int i = 0; i < contacts.length(); i++) {
-
-                                JSONObject contactJSONObject = contacts.getJSONObject(i);
-                                String campus = contactJSONObject.getString("campus");
-                                String class_number = contactJSONObject.getString("class_number");
-//                                first_name = (first_name.equals("null")) ? "" : first_name;
-                                String capacity = contactJSONObject.getString("capacity");
-                                String floor = contactJSONObject.getString("floor");
-//                                String time = contactJSONObject.getString("time");
-//                                String date = contactJSONObject.getString("date");
-
-//                                editTextDate.setText(date);
-//                                editTextTime.setText(datePick);
-
-//                                editTextDate.setText(date);
-//                                editTextTime.setText(floor);
-//                                last_name = (last_name.equals("null")) ? "" : last_name;
-//                                statusFriend = contactJSONObject.getString("available");
-                                HashMap<String, String> contact = new HashMap<>();
-                                contact.put("campus", campus);
-                                contact.put("class_number", class_number);
-                                contact.put("capacity", capacity);
-                                contact.put("floor", floor);
-//                                contact.put("id", id);
-//                                statusFriend = (statusFriend.equals("true")) ? "Available" : "UnAvailable";
-//                                contact.put("status", statusFriend);
-                                String stringHour = String.valueOf(charHour);
-
-//                                if ((time.contains(stringHour)) && (date.contains(datePick)) && (spinnerResult.contains(campus))) {
-//                                    editTextDate.setText(date);
-//                                    editTextTime.setText(datePick);
-//                                Toast.makeText(MainActivity.this, spinnerResult + "^^" + campus, Toast.LENGTH_LONG).show();
-                                contactList.add(contact);
-//                                }
-                                //Sorting contactlist by status
-//                                try {
-////                                    Collections.sort(contactList, new Comparator<HashMap<String, String>>() {
-////                                        @Override
-////                                        public int compare(HashMap<String, String> stringHashMapEmail, HashMap<String, String> stringHashMapEmail1) {
-////                                            return stringHashMapEmail.get("status").compareTo(stringHashMapEmail1.get("status"));
-////                                        }
-////                                    });
-//                                } catch (Exception e) {
-//                                    // TODO Auto-generated catch block
-//                                    e.printStackTrace();
-//                                }
-                                ListAdapter adapter = new SimpleAdapter(MainActivity.this, contactList,
-                                        R.layout.list_item, new String[]{"campus", "class_number", "capacity", "floor"},
-                                        new int[]{R.id.campus, R.id.room_number, R.id.capacity, R.id.floor});
-                                listView.setAdapter(adapter);
-
-                            }
+//                            }
                         } catch (final JSONException e) {
 //                            Log.e(TAG, "Json parsing error: " + e.getMessage());
                         }
@@ -443,17 +379,69 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
 //                        Log.d("Error.Response", error.getMessage());
                     }
                 }
-        );
-//        {
-//            @Override
-//            public Map<String, String> getHeaders() throws AuthFailureError {
-//                HashMap<String, String> headers = new HashMap<String, String>();
-////                tokenId = getActivity().getIntent().getStringExtra("tokenId");
-////                headers.put("Authorization", tokenId);
-//                return headers;
-//            }
-//        };
-        queue.add(getRequest);
+        )
+        {
+            @Override
+            protected Map<String, String> getParams()
+            {
+                Map<String, String> params = new HashMap<String, String>();
+                params.put("date", dateSelected);
+                params.put("time", firstTimeSelected);
+                params.put("campus", campusSelected);
+                params.put("class_number", roomSelected);
+                params.put("capacity", capacitySelected);
+                params.put("floor", floorSelected);
+
+                return params;
+            }
+        };
+        queue.add(putRequest);
+    }
+
+//////////////////////////////////////////////////////////////////////////////////////////////
+
+    @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
+    private void removeSelectedTime() {
+        RequestQueue queue = Volley.newRequestQueue(this);
+
+        final String url = "http://10.0.2.2:3000/api/rooms/" + idSelected;
+        StringRequest putRequest = new StringRequest(Request.Method.PUT, url,
+                new Response.Listener<String>() {
+                    @Override
+                    public void onResponse(String response) {
+                        // response
+                        try {
+                            JSONObject jsonObj = new JSONObject(response);
+                            // Getting JSON Array node
+//                            }
+                        } catch (final JSONException e) {
+//                            Log.e(TAG, "Json parsing error: " + e.getMessage());
+                        }
+                    }
+                },
+                new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+//                        Log.d("Error.Response", error.getMessage());
+                    }
+                }
+        )
+        {
+            @Override
+            protected Map<String, String> getParams()
+            {
+                Map<String, String> params = new HashMap<String, String>();
+                params.put("date", dateSelected);
+                params.put("time", timeSelected);
+                params.put("campus", campusSelected);
+                params.put("class_number", roomSelected);
+                params.put("capacity", capacitySelected);
+                params.put("floor", floorSelected);
+
+                return params;
+            }
+        };
+        queue.add(putRequest);
     }
 
 ////////////////////////////////////////////////////////////////
@@ -505,14 +493,17 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
                                 contact.put("capacity", capacity);
                                 contact.put("floor", floor);
                                 contact.put("id", id);
+                                contact.put("date", date);
+                                contact.put("time", time);
+
 //                                statusFriend = (statusFriend.equals("true")) ? "Available" : "UnAvailable";
 //                                contact.put("status", statusFriend);
                                 String stringHour = String.valueOf(charHour);
 
-//                                if ((time.contains(stringHour)) && (date.contains(datePick)) && (spinnerResult.contains(campus))) {
+                                if ((time.contains(stringHour)) && (date.contains(datePick)) && (spinnerResult.contains(campus))) {
 
                                     contactList.add(contact);
-//                                }
+                                }
                                 //Sorting contactlist by status
 //                                try {
 ////                                    Collections.sort(contactList, new Comparator<HashMap<String, String>>() {
@@ -554,6 +545,57 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
 //        };
         queue.add(getRequest);
     }
+
+    private void homeFragment() {
+        frameLayout.setBackgroundResource(R.mipmap.lamk_home_background_new);
+        getSupportActionBar().setTitle("LAMK");
+        spinner.setVisibility(View.INVISIBLE);
+        editTextDate.setVisibility(View.INVISIBLE);
+        editTextTime.setVisibility(View.INVISIBLE);
+        searchButton.setVisibility(View.INVISIBLE);
+        listView.setVisibility(View.INVISIBLE);
+        textViewHeader.setVisibility(View.INVISIBLE);
+        textViewReservedTime.setVisibility(View.INVISIBLE);
+        cancelReservationButton.setVisibility(View.INVISIBLE);
+
+    }
+    private void lunchFragment() {
+        frameLayout.setBackgroundResource(R.mipmap.lamk_lunch_background_new);
+        getSupportActionBar().setTitle("Lunch");
+        spinner.setVisibility(View.INVISIBLE);
+        editTextDate.setVisibility(View.INVISIBLE);
+        editTextTime.setVisibility(View.INVISIBLE);
+        searchButton.setVisibility(View.INVISIBLE);
+        listView.setVisibility(View.INVISIBLE);
+        textViewHeader.setVisibility(View.INVISIBLE);
+        textViewReservedTime.setVisibility(View.INVISIBLE);
+        cancelReservationButton.setVisibility(View.INVISIBLE);
+    }
+    private void eventFragment() {
+        frameLayout.setBackgroundResource(R.mipmap.lamk_event_background_new);
+        getSupportActionBar().setTitle("Reppu events");
+        spinner.setVisibility(View.INVISIBLE);
+        editTextDate.setVisibility(View.INVISIBLE);
+        editTextTime.setVisibility(View.INVISIBLE);
+        searchButton.setVisibility(View.INVISIBLE);
+        listView.setVisibility(View.INVISIBLE);
+        textViewHeader.setVisibility(View.INVISIBLE);
+        textViewReservedTime.setVisibility(View.INVISIBLE);
+        cancelReservationButton.setVisibility(View.INVISIBLE);
+    }
+    private void routeFragment() {
+        frameLayout.setBackgroundResource(R.mipmap.lamk_route_background_new);
+        getSupportActionBar().setTitle("Route guide");
+        spinner.setVisibility(View.INVISIBLE);
+        editTextDate.setVisibility(View.INVISIBLE);
+        editTextTime.setVisibility(View.INVISIBLE);
+        searchButton.setVisibility(View.INVISIBLE);
+        listView.setVisibility(View.INVISIBLE);
+        textViewHeader.setVisibility(View.INVISIBLE);
+        textViewReservedTime.setVisibility(View.INVISIBLE);
+        cancelReservationButton.setVisibility(View.INVISIBLE);
+    }
+
 
 
     private BottomNavigationView.OnNavigationItemSelectedListener mOnNavigationItemSelectedListener
