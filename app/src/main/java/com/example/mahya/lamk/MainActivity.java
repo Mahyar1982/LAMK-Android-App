@@ -2,6 +2,7 @@ package com.example.mahya.lamk;
 
 import android.app.DatePickerDialog;
 import android.app.TimePickerDialog;
+import android.icu.text.DateFormat;
 import android.icu.text.SimpleDateFormat;
 import android.icu.util.Calendar;
 import android.os.Build;
@@ -71,6 +72,7 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
     String time = "";
     int finalH = 0;
     char charHour;
+    String datePick;
 
     @RequiresApi(api = Build.VERSION_CODES.N)
     @Override
@@ -90,6 +92,8 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         listView = (ListView) findViewById(R.id.listView);
         contactList = new ArrayList<>();
         textViewHeader = (TextView) findViewById(R.id.textViewHeading);
+//        datePick = DateFormat.getDateTimeInstance().format(new Date());
+//        datePick = new SimpleDateFormat("yyyy-MM-dd").format(Calendar.getInstance().getTime());
     }
 
 
@@ -110,10 +114,17 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         searchButton.setVisibility(View.VISIBLE);
         listView.setVisibility(View.VISIBLE);
 
+//        datePick = DateFormat.getDateTimeInstance().format(new Date());
+
+        datePick = new SimpleDateFormat("yyyy-MM-dd").format(Calendar.getInstance().getTime());
+
         roomsList = new ArrayList<>();
 
         Date currentDate = new Date();
-        editTextDate.setHint("Select Date");
+
+        editTextDate.setHint(new SimpleDateFormat("yyyy-MM-dd").format(Calendar.getInstance().getTime()));
+
+//        editTextDate.setHint("Select Date");
         editTextTime.setHint(currentDate.getHours() + ":" + currentDate.getMinutes());
 
         myFormat = "dd/MM/yy"; //In which you need put here
@@ -133,6 +144,7 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
                 myCalendar.set(Calendar.YEAR, year);
                 myCalendar.set(Calendar.MONTH, monthOfYear);
                 myCalendar.set(Calendar.DAY_OF_MONTH, dayOfMonth);
+//                datePick = DateFormat.getDateTimeInstance().format(new Date());
                 updateLabel();
             }
 
@@ -201,7 +213,7 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         searchButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if(h && d) {
+                if(h || d) {
 //                        editTextTime.setText(String.valueOf(charHour));
 //                        editTextDate.setText(String.valueOf(y));
                         textViewHeader.setVisibility(View.VISIBLE);
@@ -217,16 +229,22 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
 
     @RequiresApi(api = Build.VERSION_CODES.N)
     private void updateLabel() {
-        myFormat = "dd/MM/yy"; //In which you need put here
+        myFormat = "yyyy-MM-dd"; //In which you need put here
         sdf = new SimpleDateFormat(myFormat, Locale.US);
         Date currentDate = new Date();
+//        editTextTime.setText(String.valueOf(currentDate));
+//        datePick = String.valueOf(currentDate);
+//        datePick = new SimpleDateFormat("yyyy-MM-dd").format(Calendar.getInstance().getTime());
+//        datePick = DateFormat.getDateTimeInstance().format(new Date());
         if((myCalendar).after(currentDate)) {
             editTextDate.setText(sdf.format(myCalendar.getTime()));
             d = true;
+            datePick = sdf.format(myCalendar.getTime());
         }
         if((sdf.format(myCalendar.getTime())).equals(sdf.format(currentDate.getTime()))) {
             editTextDate.setText(sdf.format(myCalendar.getTime()));
             d = true;
+            datePick = sdf.format(myCalendar.getTime());
         }
         else if((myCalendar).before(currentDate)) {
             editTextDate.setText("Previous date is not acceptable");
@@ -235,7 +253,6 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
 
     @Override
     public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
-
     }
 
     @Override
@@ -283,7 +300,7 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         listView.setVisibility(View.INVISIBLE);
         textViewHeader.setVisibility(View.INVISIBLE);
     }
-
+////////////////////////////////////////////////////////////////
     @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
     private void handlingJson() {
 //        Cache cache = new DiskBasedCache(getCacheDir(), 1024 * 1024);
@@ -316,6 +333,12 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
                                 String capacity = contactJSONObject.getString("capacity");
                                 String floor = contactJSONObject.getString("floor");
                                 String time = contactJSONObject.getString("time");
+                                String date = contactJSONObject.getString("date");
+
+//                                editTextDate.setText(date);
+//                                editTextTime.setText(datePick);
+
+//                                editTextDate.setText(date);
 //                                editTextTime.setText(floor);
 //                                last_name = (last_name.equals("null")) ? "" : last_name;
 //                                statusFriend = contactJSONObject.getString("available");
@@ -327,7 +350,10 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
 //                                statusFriend = (statusFriend.equals("true")) ? "Available" : "UnAvailable";
 //                                contact.put("status", statusFriend);
                                 String stringHour = String.valueOf(charHour);
-                                if (time.contains(stringHour)) {
+
+                                if (time.contains(stringHour) && date.contains(datePick)) {
+                                    editTextDate.setText(date);
+                                    editTextTime.setText(datePick);
                                     contactList.add(contact);
                                 }
                                 //Sorting contactlist by status
