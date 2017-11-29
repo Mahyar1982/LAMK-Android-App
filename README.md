@@ -3,6 +3,7 @@
 ##### First, I tried to make the app's design as similiar as to the original app.
 ![alt text](https://user-images.githubusercontent.com/25009890/33402815-7a6bb580-d566-11e7-91d2-1ad348bdd958.jpg)
 ##### In the Search Fragment, I put three elements, one Spinner and two EditText for searching, including campus, date and time.
+![alt text](https://user-images.githubusercontent.com/25009890/33402816-7a890176-d566-11e7-9c52-6cd4478f466d.jpg)
 ##### By clicking on the Spinner, the student can select campus.
 ##### By clicking on DatePicker, student can select the date.
 ##### By clicking on TimePicker, student can select the time. (The time is allowed only between 8am to 6pm)
