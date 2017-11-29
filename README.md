@@ -5,8 +5,14 @@
 ##### In the Search Fragment, I put three elements, one Spinner and two EditText for searching, including campus, date and time.
 ![alt text](https://user-images.githubusercontent.com/25009890/33402816-7a890176-d566-11e7-9c52-6cd4478f466d.jpg)
 ##### By clicking on the Spinner, the student can select campus.
+![alt text](https://user-images.githubusercontent.com/25009890/33402817-7aa33c8a-d566-11e7-8d72-5f1aa9ad6e14.jpg)
 ##### By clicking on DatePicker, student can select the date.
+![alt text](https://user-images.githubusercontent.com/25009890/33402818-7abe1302-d566-11e7-80e1-05eb373050d9.jpg)
 ##### By clicking on TimePicker, student can select the time. (The time is allowed only between 8am to 6pm)
+![alt text]()
 ##### By clicking on SearchButton, student can check the available classes information including campus name, name, floor and capacity.
-##### By clicking on the item, student can reserve the room.
-##### A message is shown and asks the user the confirm the reservation. After confirming, the reservation information is shown on the screen and the class removed the database.
+![alt text](https://user-images.githubusercontent.com/25009890/33402820-7b00d854-d566-11e7-96f4-f414c61cf918.jpg)
+##### By clicking on the item, student can reserve the room. A message is shown and asks the user the confirm the reservation.
+![alt text](https://user-images.githubusercontent.com/25009890/33402821-7b1dc3a6-d566-11e7-8ace-510b948c596a.jpg)
+##### After confirming, the reservation information is shown on the screen and the class removed the database.
+![alt text](https://user-images.githubusercontent.com/25009890/33402819-7ae40a62-d566-11e7-8943-bef4a43b72f0.jpg)
