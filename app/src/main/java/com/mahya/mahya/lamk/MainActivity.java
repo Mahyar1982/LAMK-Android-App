@@ -1,9 +1,8 @@
-package com.example.mahya.lamk;
+package com.mahya.mahya.lamk;
 
 import android.app.DatePickerDialog;
 import android.app.TimePickerDialog;
 import android.content.DialogInterface;
-import android.icu.text.DateFormat;
 import android.icu.text.SimpleDateFormat;
 import android.icu.util.Calendar;
 import android.os.Build;
@@ -13,7 +12,6 @@ import android.support.annotation.RequiresApi;
 import android.support.design.widget.BottomNavigationView;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
@@ -30,18 +28,10 @@ import android.widget.TextView;
 import android.widget.TimePicker;
 import android.widget.Toast;
 
-import com.android.volley.AuthFailureError;
-import com.android.volley.Cache;
-import com.android.volley.Network;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
-import com.android.volley.toolbox.BasicNetwork;
-import com.android.volley.toolbox.DiskBasedCache;
-import com.android.volley.toolbox.HurlStack;
-import com.android.volley.toolbox.JsonArrayRequest;
-import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 
@@ -50,8 +40,6 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Locale;
@@ -358,7 +346,8 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
     private void cancelReservation() {
         RequestQueue queue = Volley.newRequestQueue(this);
 
-        final String url = "http://10.0.2.2:3000/api/rooms/" + idSelected;
+//        final String url = "http://10.0.2.2:3000/api/rooms/" + idSelected;
+        final String url = "https://lamk.herokuapp.com/api/rooms/" + idSelected;
         StringRequest putRequest = new StringRequest(Request.Method.PUT, url,
                 new Response.Listener<String>() {
                     @Override
@@ -404,7 +393,8 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
     private void removeSelectedTime() {
         RequestQueue queue = Volley.newRequestQueue(this);
 
-        final String url = "http://10.0.2.2:3000/api/rooms/" + idSelected;
+//        final String url = "http://10.0.2.2:3000/api/rooms/" + idSelected;
+        final String url = "https://lamk.herokuapp.com/api/rooms" + idSelected;
         StringRequest putRequest = new StringRequest(Request.Method.PUT, url,
                 new Response.Listener<String>() {
                     @Override
@@ -453,7 +443,8 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
 //        mRequestQueue.start();
         RequestQueue queue = Volley.newRequestQueue(this);
 //        userId = getIntent().getStringExtra("userId");
-        final String url = "http://10.0.2.2:3000/api/rooms";
+//        final String url = "http://10.0.2.2:3000/api/rooms";
+        final String url = "https://lamk.herokuapp.com/api/rooms";
         StringRequest getRequest = new StringRequest(Request.Method.GET, url,
                 new Response.Listener<String>() {
                     @Override
@@ -461,7 +452,7 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
                         // response
 //                        Log.d("Response", response.toString());
 //                        String responseStr = response.toString();
-//                        JSONObject jsonObj = new JSONObject(response);
+//                        JSONObject jsonObj = new JSONO\\\\bject(response);
                         try {
                             JSONObject jsonObj = new JSONObject(response);
                             // Getting JSON Array node
